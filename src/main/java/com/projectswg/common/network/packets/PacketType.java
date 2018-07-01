@@ -85,8 +85,6 @@ import com.projectswg.common.network.packets.swg.zone.ServerNowEpochTime;
 import com.projectswg.common.network.packets.swg.zone.ServerTimeMessage;
 import com.projectswg.common.network.packets.swg.zone.ServerWeatherMessage;
 import com.projectswg.common.network.packets.swg.zone.SetWaypointColor;
-import com.projectswg.common.network.packets.swg.zone.ShowBackpack;
-import com.projectswg.common.network.packets.swg.zone.ShowHelmet;
 import com.projectswg.common.network.packets.swg.zone.StopClientEffectObjectByLabelMessage;
 import com.projectswg.common.network.packets.swg.zone.UpdateContainmentMessage;
 import com.projectswg.common.network.packets.swg.zone.UpdatePostureMessage;
@@ -140,7 +138,6 @@ import com.projectswg.common.network.packets.swg.zone.chat.ChatSystemMessage;
 import com.projectswg.common.network.packets.swg.zone.chat.ChatUnbanAvatarFromRoom;
 import com.projectswg.common.network.packets.swg.zone.chat.ChatUninviteFromRoom;
 import com.projectswg.common.network.packets.swg.zone.chat.ConGenericMessage;
-import com.projectswg.common.network.packets.swg.zone.chat.VoiceChatStatus;
 import com.projectswg.common.network.packets.swg.zone.combat.GrantCommandMessage;
 import com.projectswg.common.network.packets.swg.zone.deltas.DeltasMessage;
 import com.projectswg.common.network.packets.swg.zone.insertion.ChatRoomList;
@@ -237,8 +234,6 @@ public enum PacketType {
 	DELTA										(DeltasMessage.CRC, 				DeltasMessage.class),
 	SERVER_TIME_MESSAGE							(ServerTimeMessage.CRC, 			ServerTimeMessage.class),
 	SET_WAYPOINT_COLOR							(SetWaypointColor.CRC, 				SetWaypointColor.class),
-	SHOW_BACKPACK								(ShowBackpack.CRC, 					ShowBackpack.class),
-	SHOW_HELMET									(ShowHelmet.CRC, 					ShowHelmet.class),
 	SERVER_WEATHER_MESSAGE						(ServerWeatherMessage.CRC, 			ServerWeatherMessage.class),
 	PLAY_MUSIC_MESSAGE							(PlayMusicMessage.CRC,				PlayMusicMessage.class),
 	PLAY_CLIENT_EFFECT_OBJECT_MESSAGE			(PlayClientEffectObjectMessage.CRC, PlayClientEffectObjectMessage.class),
@@ -283,7 +278,6 @@ public enum PacketType {
 		CHAT_ADD_MODERATOR_TO_ROOM				(ChatAddModeratorToRoom.CRC,		ChatAddModeratorToRoom.class),
 		CHAT_REMOVE_MODERATOR_FROM_ROOM			(ChatRemoveModeratorFromRoom.CRC,	ChatRemoveModeratorFromRoom.class),
 		CON_GENERIC_MESSAGE						(ConGenericMessage.CRC, 			ConGenericMessage.class),
-		VOICE_CHAT_STATUS						(VoiceChatStatus.CRC, 				VoiceChatStatus.class),
 
 		// Scene
 		SCENE_END_BASELINES						(SceneEndBaselines.CRC, 				SceneEndBaselines.class),

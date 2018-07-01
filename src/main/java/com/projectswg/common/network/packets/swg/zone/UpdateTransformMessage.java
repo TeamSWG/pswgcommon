@@ -40,8 +40,6 @@ public class UpdateTransformMessage extends SWGPacket {
 	private int updateCounter;
 	private byte direction;
 	private float speed;
-	private byte lookAtYaw;
-	private boolean useLookAtYaw;
 
 	public UpdateTransformMessage() {
 		this.objId = 0;
@@ -67,8 +65,6 @@ public class UpdateTransformMessage extends SWGPacket {
 		updateCounter = data.getInt();
 		speed = data.getByte();
 		direction = data.getByte();
-		lookAtYaw = data.getByte();
-		useLookAtYaw = data.getBoolean();
 	}
 	
 	public NetBuffer encode() {
@@ -82,8 +78,6 @@ public class UpdateTransformMessage extends SWGPacket {
 		data.addInt(updateCounter);
 		data.addByte((byte) speed);
 		data.addByte(direction);
-		data.addByte(lookAtYaw); // lookAtYaw
-		data.addBoolean(useLookAtYaw); // useLookAtYaw
 		return data;
 	}
 	
@@ -103,19 +97,4 @@ public class UpdateTransformMessage extends SWGPacket {
 	public byte getDirection() { return direction; }
 	public float getSpeed() { return speed; }
 
-	public boolean isUseLookAtYaw() {
-		return useLookAtYaw;
-	}
-
-	public void setUseLookAtYaw(boolean useLookAtYaw) {
-		this.useLookAtYaw = useLookAtYaw;
-	}
-
-	public byte getLookAtYaw() {
-		return lookAtYaw;
-	}
-
-	public void setLookAtYaw(byte lookAtYaw) {
-		this.lookAtYaw = lookAtYaw;
-	}
 }

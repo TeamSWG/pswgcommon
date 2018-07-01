@@ -45,8 +45,6 @@ public class UpdateTransformWithParentMessage extends SWGPacket {
 	private int updateCounter;
 	private byte speed;
 	private byte direction;
-	private byte lookDirection;
-	private boolean useLookDirection;
 	
 	public UpdateTransformWithParentMessage() {
 		
@@ -57,14 +55,12 @@ public class UpdateTransformWithParentMessage extends SWGPacket {
 		this.objectId = objectId;
 	}
 
-	public UpdateTransformWithParentMessage(long cellId, long objectId, Location location, int updateCounter, byte speed, byte direction, byte lookDirection, boolean useLookDirection) {
+	public UpdateTransformWithParentMessage(long cellId, long objectId, Location location, int updateCounter, byte speed, byte direction) {
 		this.cellId = cellId;
 		this.objectId = objectId;
 		this.updateCounter = updateCounter;
 		this.speed = speed;
 		this.direction = direction;
-		this.lookDirection = lookDirection;
-		this.useLookDirection = useLookDirection;
 		setLocation(location);
 	}
 
@@ -80,13 +76,11 @@ public class UpdateTransformWithParentMessage extends SWGPacket {
 		updateCounter	= data.getInt();
 		speed			= data.getByte();
 		direction		= data.getByte();
-		lookDirection	= data.getByte();
-		useLookDirection= data.getBoolean();
 	}
 
 	@Override
 	public NetBuffer encode() {
-		NetBuffer data = NetBuffer.allocate(36);
+		NetBuffer data = NetBuffer.allocate(34);
 		data.addShort(11);
 		data.addInt(CRC);
 		data.addLong(cellId);
@@ -97,8 +91,6 @@ public class UpdateTransformWithParentMessage extends SWGPacket {
 		data.addInt(updateCounter);
 		data.addByte(speed);
 		data.addByte(direction);
-		data.addByte(lookDirection);
-		data.addBoolean(useLookDirection);
 		return data;
 	}
 	
@@ -122,14 +114,6 @@ public class UpdateTransformWithParentMessage extends SWGPacket {
 		this.direction = direction;
 	}
 	
-	public void setLookDirection(byte lookDirection) {
-		this.lookDirection = lookDirection;
-	}
-	
-	public void setUseLookDirection(boolean useLookDirection) {
-		this.useLookDirection = useLookDirection;
-	}
-	
 	public long getCellId() {
 		return cellId;
 	}
@@ -148,14 +132,6 @@ public class UpdateTransformWithParentMessage extends SWGPacket {
 	
 	public byte getDirection() {
 		return direction;
-	}
-	
-	public byte getLookDirection() {
-		return lookDirection;
-	}
-	
-	public boolean isUseLookDirection() {
-		return useLookDirection;
 	}
 	
 	public void setLocation(Location location) {

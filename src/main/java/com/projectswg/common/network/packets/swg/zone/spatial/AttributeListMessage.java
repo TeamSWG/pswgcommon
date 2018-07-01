@@ -58,7 +58,6 @@ public class AttributeListMessage extends SWGPacket {
 		if (!super.checkDecode(data, CRC))
 			return;
 		objectId = data.getLong();
-		data.getAscii(); // static item name
 		int count = data.getInt();
 		for (int i = 0; i < count; i++) {
 			String name = data.getAscii();
@@ -74,11 +73,10 @@ public class AttributeListMessage extends SWGPacket {
 		for (Entry <String, String> e : attributes.entrySet()) {
 			size += 6 + e.getKey().length() + (e.getValue().length() * 2);
 		}
-		NetBuffer data = NetBuffer.allocate(24 + size);
+		NetBuffer data = NetBuffer.allocate(22 + size);
 		data.addShort(3);
 		data.addInt(CRC);
 		data.addLong(objectId);
-		data.addShort(0);
 		data.addInt(attributes.size());
 		for (Entry <String, String> e : attributes.entrySet()) {
 			data.addAscii(e.getKey());
