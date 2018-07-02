@@ -71,7 +71,7 @@ public class RadialOptionList implements Encodable {
 			RadialOption option = new RadialOption();
 			int opt = data.getByte(); // option number
 			int parent = data.getByte(); // parentId
-			int radialType = data.getShort(); // radialType
+			int radialType = data.getByte(); // radialType
 			data.getByte(); // optionType
 			data.getUnicode(); // text
 			RadialItem item = RadialItem.getFromId(radialType);
@@ -156,7 +156,7 @@ public class RadialOptionList implements Encodable {
 		int myIndex = index++;
 		data.addByte(myIndex);
 		data.addByte(parentIndex);
-		data.addShort(parent.getId());
+		data.addByte(parent.getId());
 		data.addByte(parent.getOptionType());
 		if (parent.getText() != null || !parent.getText().isEmpty())
 			data.addUnicode(parent.getText());
