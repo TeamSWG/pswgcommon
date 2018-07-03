@@ -45,12 +45,9 @@ public class CombatAction extends ObjectController {
 	private long attackerId;
 	private long weaponId;
 	private Posture posture;
-	private Point3D position;
-	private long cell;
 	private TrailLocation trail;
 	private byte clientEffectId;
 	private int commandCrc;
-	private boolean useLocation;
 	private Set<Defender> defenders;
 	
 	public CombatAction(long objectId) {
@@ -74,11 +71,6 @@ public class CombatAction extends ObjectController {
 		trail = TrailLocation.getTrailLocation(data.getByte());
 		clientEffectId = data.getByte();
 		commandCrc = data.getInt();
-		useLocation = data.getBoolean();
-		if (useLocation) {
-			position = data.getEncodable(Point3D.class);
-			cell = data.getLong();
-		}
 		int count = data.getShort();
 		for (int i = 0; i < count; i++) {
 			Defender d = new Defender();
@@ -94,7 +86,7 @@ public class CombatAction extends ObjectController {
 	
 	@Override
 	public NetBuffer encode() {
-		NetBuffer data = NetBuffer.allocate(HEADER_LENGTH + 30 + defenders.size() * 14 + (useLocation ? 20 : 0));
+		NetBuffer data = NetBuffer.allocate(HEADER_LENGTH + 29 + defenders.size() * 14);
 		encodeHeader(data);
 		data.addInt(actionCrc);
 		data.addLong(attackerId);
@@ -103,11 +95,6 @@ public class CombatAction extends ObjectController {
 		data.addByte(trail.getNum());
 		data.addByte(clientEffectId);
 		data.addInt(commandCrc);
-		data.addBoolean(useLocation);
-		if (useLocation) {
-			data.addEncodable(position);
-			data.addLong(cell);
-		}
 		data.addShort(defenders.size());
 		for (Defender d : defenders) {
 			data.addLong(d.getCreatureId());
@@ -136,14 +123,6 @@ public class CombatAction extends ObjectController {
 		return posture;
 	}
 	
-	public Point3D getPosition() {
-		return position;
-	}
-	
-	public long getCell() {
-		return cell;
-	}
-	
 	public TrailLocation getTrail() {
 		return trail;
 	}
@@ -154,10 +133,6 @@ public class CombatAction extends ObjectController {
 	
 	public int getCommandCrc() {
 		return commandCrc;
-	}
-	
-	public boolean isUseLocation() {
-		return useLocation;
 	}
 	
 	public Set<Defender> getDefenders() {
@@ -180,14 +155,6 @@ public class CombatAction extends ObjectController {
 		this.posture = posture;
 	}
 	
-	public void setPosition(Point3D position) {
-		this.position = position;
-	}
-	
-	public void setCell(long cell) {
-		this.cell = cell;
-	}
-	
 	public void setTrail(TrailLocation trail) {
 		this.trail = trail;
 	}
@@ -198,10 +165,6 @@ public class CombatAction extends ObjectController {
 	
 	public void setCommandCrc(int commandCrc) {
 		this.commandCrc = commandCrc;
-	}
-	
-	public void setUseLocation(boolean useLocation) {
-		this.useLocation = useLocation;
 	}
 	
 	public void addDefender(Defender defender) {
