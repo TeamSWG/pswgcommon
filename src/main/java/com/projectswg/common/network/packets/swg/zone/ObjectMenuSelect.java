@@ -35,13 +35,13 @@ public class ObjectMenuSelect extends SWGPacket {
 	public static final int CRC = getCrc("ObjectMenuSelectMessage::MESSAGE_TYPE");
 	
 	private long objectId;
-	private short selection;
+	private byte selection;
 	
 	public ObjectMenuSelect() {
-		this(0, (short) 0);
+		this(0, (byte) 0);
 	}
 	
-	public ObjectMenuSelect(long objectId, short selection) {
+	public ObjectMenuSelect(long objectId, byte selection) {
 		this.objectId = objectId;
 		this.selection = selection;
 	}
@@ -51,16 +51,16 @@ public class ObjectMenuSelect extends SWGPacket {
 		if (!super.checkDecode(data, CRC))
 			return;
 		objectId = data.getLong();
-		selection = data.getShort();
+		selection = data.getByte();
 	}
 	
 	@Override
 	public NetBuffer encode() {
-		NetBuffer data = NetBuffer.allocate(16);
+		NetBuffer data = NetBuffer.allocate(15);
 		data.addShort(3);
 		data.addInt(CRC);
 		data.addLong(objectId);
-		data.addShort(selection);
+		data.addByte(selection);
 		return data;
 	}
 	
@@ -68,7 +68,7 @@ public class ObjectMenuSelect extends SWGPacket {
 		this.objectId = objectId;
 	}
 	
-	public void setSelection(short selection) {
+	public void setSelection(byte selection) {
 		this.selection = selection;
 	}
 	
