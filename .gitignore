@@ -4,6 +4,8 @@
 PSWGCommon.iml
 out
 .idea
+.project
+.classpath
 
 # Gradle
 bin
