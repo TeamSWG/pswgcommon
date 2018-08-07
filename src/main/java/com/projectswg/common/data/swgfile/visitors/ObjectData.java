@@ -1,30 +1,29 @@
 /***********************************************************************************
-* Copyright (c) 2015 /// Project SWG /// www.projectswg.com                        *
-*                                                                                  *
-* ProjectSWG is the first NGE emulator for Star Wars Galaxies founded on           *
-* July 7th, 2011 after SOE announced the official shutdown of Star Wars Galaxies.  *
-* Our goal is to create an emulator which will provide a server for players to     *
-* continue playing a game similar to the one they used to play. We are basing      *
-* it on the final publish of the game prior to end-game events.                    *
-*                                                                                  *
-* This file is part of Holocore.                                                   *
-*                                                                                  *
-* -------------------------------------------------------------------------------- *
-*                                                                                  *
-* Holocore is free software: you can redistribute it and/or modify                 *
-* it under the terms of the GNU Affero General Public License as                   *
-* published by the Free Software Foundation, either version 3 of the               *
-* License, or (at your option) any later version.                                  *
-*                                                                                  *
-* Holocore is distributed in the hope that it will be useful,                      *
-* but WITHOUT ANY WARRANTY; without even the implied warranty of                   *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                    *
-* GNU Affero General Public License for more details.                              *
-*                                                                                  *
-* You should have received a copy of the GNU Affero General Public License         *
-* along with Holocore.  If not, see <http://www.gnu.org/licenses/>.                *
-*                                                                                  *
-***********************************************************************************/
+ * Copyright (c) 2018 /// Project SWG /// www.projectswg.com                       *
+ *                                                                                 *
+ * ProjectSWG is the first NGE emulator for Star Wars Galaxies founded on          *
+ * July 7th, 2011 after SOE announced the official shutdown of Star Wars Galaxies. *
+ * Our goal is to create an emulator which will provide a server for players to    *
+ * continue playing a game similar to the one they used to play. We are basing     *
+ * it on the final publish of the game prior to end-game events.                   *
+ *                                                                                 *
+ * This file is part of PSWGCommon.                                                *
+ *                                                                                 *
+ * --------------------------------------------------------------------------------*
+ *                                                                                 *
+ * PSWGCommon is free software: you can redistribute it and/or modify              *
+ * it under the terms of the GNU Affero General Public License as                  *
+ * published by the Free Software Foundation, either version 3 of the              *
+ * License, or (at your option) any later version.                                 *
+ *                                                                                 *
+ * PSWGCommon is distributed in the hope that it will be useful,                   *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                  *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   *
+ * GNU Affero General Public License for more details.                             *
+ *                                                                                 *
+ * You should have received a copy of the GNU Affero General Public License        *
+ * along with PSWGCommon.  If not, see <http://www.gnu.org/licenses/>.             *
+ ***********************************************************************************/
 package com.projectswg.common.data.swgfile.visitors;
 
 import com.projectswg.common.data.EnumLookup;
@@ -33,6 +32,7 @@ import com.projectswg.common.data.swgfile.ClientData;
 import com.projectswg.common.data.swgfile.ClientFactory;
 import com.projectswg.common.data.swgfile.IffNode;
 import com.projectswg.common.data.swgfile.SWGFile;
+import com.projectswg.common.network.packets.swg.zone.baselines.Baseline.BaselineType;
 import me.joshlarson.jlcommon.log.Log;
 
 import java.util.ArrayList;
@@ -119,6 +119,9 @@ public class ObjectData extends ClientData {
 		WEAPON_EFFECT							("weaponEffect"),
 		WEAPON_EFFECT_INDEX						("weaponEffectIndex"),
 		
+		// Holocore
+		HOLOCORE_BASELINE_TYPE					("holocoreBaselineType"),
+		
 		UNKNOWN									("");
 		
 		private static final EnumLookup<String, ObjectDataAttribute> LOOKUP = new EnumLookup<>(ObjectDataAttribute.class, ObjectDataAttribute::getName);
@@ -143,9 +146,46 @@ public class ObjectData extends ClientData {
 	@Override
 	public void readIff(SWGFile iff) {
 		readNextForm(iff);
+		if (!attributes.containsKey(ObjectDataAttribute.HOLOCORE_BASELINE_TYPE))
+			System.err.println("Unknown baseline type: " + iff.getFileName());
 	}
 	
 	private void readNextForm(SWGFile iff) {
+		BaselineType type;
+		switch (iff.getCurrentForm().getTag()) {
+			case "SBMK": type = BaselineType.BMRK; break; // Battlefield Marker
+			case "SBOT": type = BaselineType.BUIO; break; // Building
+			case "CCLT": type = BaselineType.SCLT; break; // Cell
+			case "SCNC": type = BaselineType.CONC; break; // Construction Contraction
+			case "SCOU": type = null; break; // Counting
+			case "SCOT": type = BaselineType.CREO; break; // Creature / Mobile
+			case "SDSC": type = BaselineType.DSCO; break; // Draft Schematic
+			case "SFOT": type = BaselineType.FCYT; break; // Factory
+			case "SGRP": type = BaselineType.GRUP; break; // Group
+			case "SGLD": type = BaselineType.GILD; break; // Guild
+			case "SIOT": type = BaselineType.INSO; break; // Installation
+			case "SITN": type = BaselineType.ITNO; break; // Intangible
+			case "SJED": type = BaselineType.JEDI; break; // Jedi Manager
+			case "SMSC": type = BaselineType.MSCO; break; // Manufacture Schematic
+			case "SMSO": type = BaselineType.MISO; break; // Mission
+			case "SHOT": type = null; break; // Object
+			case "STOT": type = BaselineType.TANO; break; // Tangible / Path Waypoint
+			case "SPLY": type = BaselineType.PLAY; break; // Player
+			case "SPQO": type = BaselineType.PQOS; break; // Player Quest
+			case "RCCT": type = BaselineType.RCNO; break; // Resource Container
+			case "SSHP": type = BaselineType.SHIP; break; // Ship
+			case "STAT": type = BaselineType.STAO; break; // Sound Object / Static
+			case "STOK": type = BaselineType.TOKN; break; // Token
+			case "SUNI": type = null; break; // Universe
+			case "SWAY": type = BaselineType.WAYP; break; // Waypoint
+			case "SWOT": type = BaselineType.WEAO; break; // Weapon
+			default:
+				System.err.println("Unknown type: " + iff.getCurrentForm().getTag() + " for " + iff.getFileName());
+				type = null; break;
+		}
+		if (type != null)
+			attributes.putIfAbsent(ObjectDataAttribute.HOLOCORE_BASELINE_TYPE, type.name());
+		
 		IffNode next;
 		while ((next = iff.enterNextForm()) != null) {
 			String tag = next.getTag();
@@ -180,7 +220,10 @@ public class ObjectData extends ClientData {
 		}
 
 		// Put all the extended attributes in this map so it's accessible. Note that some of these are overridden.
+		Object prevBaselineType = attributes.get(ObjectDataAttribute.HOLOCORE_BASELINE_TYPE);
 		attributes.putAll(((ObjectData)attrData).getAttributes());
+		if (prevBaselineType != null)
+			attributes.put(ObjectDataAttribute.HOLOCORE_BASELINE_TYPE, prevBaselineType);
 
 		parsedFiles.add(file);
 	}
