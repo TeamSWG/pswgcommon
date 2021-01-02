@@ -26,12 +26,16 @@
  ***********************************************************************************/
 package com.projectswg.common.data.location;
 
+import com.projectswg.common.data.encodables.mongo.MongoData;
+import com.projectswg.common.data.encodables.mongo.MongoPersistable;
 import com.projectswg.common.encoding.Encodable;
 import com.projectswg.common.network.NetBuffer;
 import com.projectswg.common.network.NetBufferStream;
 import com.projectswg.common.persistable.Persistable;
 
-public class Location implements Encodable, Persistable {
+public class Location implements Encodable, Persistable, MongoPersistable {
+	
+	private static final Location ZERO = new Location(0, 0, 0, Terrain.GONE);
 	
 	private final Point3D point;
 	private final Quaternion orientation;
@@ -125,7 +129,11 @@ public class Location implements Encodable, Persistable {
 	}
 	
 	public boolean isWithinFlatDistance(Point3D target, double radius) {
-		return square(getX() - target.getX()) + square(getZ() - target.getZ()) <= square(radius);
+		double mX = getX(), mZ = getZ();
+		double tX = target.getX(), tZ = target.getZ();
+		if (Math.abs(mX - tX) >= radius || Math.abs(mZ - tZ) >= radius)
+			return false;
+		return square(mX - tX) + square(mZ - tZ) <= square(radius);
 	}
 	
 	public double getSpeed(Location l, double deltaTime) {
@@ -134,11 +142,11 @@ public class Location implements Encodable, Persistable {
 	}
 	
 	public double getYaw() {
-		return orientation.getYaw();
+		return orientation.getHeading();
 	}
 	
 	public double getHeadingTo(Location target) {
-		return (Math.toDegrees(Math.atan2(target.getX()-getX(), target.getZ()-getZ())) + 360) % 360;
+		return ((360 - Math.toDegrees(Math.atan2(target.getX()-getX(), target.getZ()-getZ())) + 360) % 360);
 	}
 	
 	public double getHeadingTo(Point3D target) {
@@ -238,6 +246,21 @@ public class Location implements Encodable, Persistable {
 	}
 	
 	@Override
+	public void readMongo(MongoData data) {
+		data.getDocument("orientation", orientation);
+		data.getDocument("point", point);
+		terrain = data.containsKey("terrain") ? Terrain.valueOf(data.getString("terrain")) : null;
+	}
+	
+	@Override
+	public void saveMongo(MongoData data) {
+		data.putDocument("orientation", orientation);
+		data.putDocument("point", point);
+		if (terrain != null)
+			data.putString("terrain", terrain.name());
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("Location[TRN=%s, %s %s]", terrain, point, orientation);
 	}
@@ -268,6 +291,10 @@ public class Location implements Encodable, Persistable {
 	
 	public static LocationBuilder builder(Location location) {
 		return new LocationBuilder(location);
+	}
+	
+	public static Location zero() {
+		return ZERO;
 	}
 	
 	public static class LocationBuilder {
@@ -321,7 +348,7 @@ public class Location implements Encodable, Persistable {
 		}
 		
 		public double getYaw() {
-			return orientation.getYaw();
+			return orientation.getHeading();
 		}
 		
 		public boolean isWithinDistance(Location l, double x, double y, double z) {

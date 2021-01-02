@@ -26,7 +26,9 @@
  ***********************************************************************************/
 package com.projectswg.common.network.packets.swg.zone.spatial;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -38,14 +40,22 @@ public class AttributeListMessage extends SWGPacket {
 	
 	private long objectId;
 	private Map <String, String> attributes;
+	private int serverRevision;
 	
 	public AttributeListMessage() {
-		this(0, new HashMap<>());
+		this(0, new LinkedHashMap<>(), 0);
 	}
 	
-	public AttributeListMessage(long objectId, Map <String, String> attributes) {
+	public AttributeListMessage(Map <String, String> attributes, int serverRevision) {
+		this.objectId = 0;
+		this.attributes = new LinkedHashMap<>(attributes);
+		this.serverRevision = serverRevision;
+	}
+	
+	public AttributeListMessage(long objectId, Map <String, String> attributes, int serverRevision) {
 		this.objectId = objectId;
-		this.attributes = attributes;
+		this.attributes = new LinkedHashMap<>(attributes);
+		this.serverRevision = serverRevision;
 	}
 	
 	public AttributeListMessage(NetBuffer data) {
@@ -63,7 +73,7 @@ public class AttributeListMessage extends SWGPacket {
 			String attr = data.getUnicode();
 			attributes.put(name, attr);
 		}
-		data.getInt();
+		serverRevision = data.getInt();
 	}
 	
 	@Override
@@ -81,9 +91,31 @@ public class AttributeListMessage extends SWGPacket {
 			data.addAscii(e.getKey());
 			data.addUnicode(e.getValue());
 		}
-		data.addInt(0);
+		data.addInt(serverRevision);
 		return data;
 	}
 	
+	public long getObjectId() {
+		return objectId;
+	}
+	
+	public Map<String, String> getAttributes() {
+		return Collections.unmodifiableMap(attributes);
+	}
+	
+	public int getServerRevision() {
+		return serverRevision;
+	}
+	
+	public void setObjectId(long objectId) {
+		this.objectId = objectId;
+	}
+	
+	public void setAttributes(Map<String, String> attributes) {
+		this.attributes = new HashMap<>(attributes);
+	}
+	
+	public void setServerRevision(int serverRevision) {
+		this.serverRevision = serverRevision;
+	}
 }
-

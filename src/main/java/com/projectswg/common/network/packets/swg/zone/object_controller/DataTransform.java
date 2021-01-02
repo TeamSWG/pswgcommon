@@ -122,4 +122,14 @@ public class DataTransform extends ObjectController {
 		return movementAngle;
 	}
 	
+	@Override
+	protected String getPacketData() {
+		return createPacketInformation(
+				"objId", getObjectId(),
+				"counter", updateCounter,
+				"location", l,
+				"speed", speed
+		);
+	}
+	
 }

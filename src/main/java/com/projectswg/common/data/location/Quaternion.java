@@ -26,13 +26,15 @@
  ***********************************************************************************/
 package com.projectswg.common.data.location;
 
+import com.projectswg.common.data.encodables.mongo.MongoData;
+import com.projectswg.common.data.encodables.mongo.MongoPersistable;
 import com.projectswg.common.encoding.Encodable;
 import com.projectswg.common.network.NetBuffer;
 import com.projectswg.common.network.NetBufferStream;
 import com.projectswg.common.persistable.Persistable;
 import me.joshlarson.jlcommon.utilities.Arguments;
 
-public class Quaternion implements Encodable, Persistable {
+public class Quaternion implements Encodable, Persistable, MongoPersistable {
 	
 	private final double [][] rotationMatrix;
 	private double x;
@@ -108,8 +110,9 @@ public class Quaternion implements Encodable, Persistable {
 		return w;
 	}
 	
-	public double getYaw() {
-		return Math.toDegrees(2 * Math.acos(w));
+	public double getHeading() {
+		double heading = Math.toDegrees(Math.atan2(2*y*w - 2*x*z , 1 - 2*y*y - 2*z*z));
+		return (heading >= 0) ? heading : heading + 360;
 	}
 	
 	public void getRotationMatrix(double [][] rotationMatrix) {
@@ -235,7 +238,23 @@ public class Quaternion implements Encodable, Persistable {
 		w = stream.getFloat();
 		updateRotationMatrix();
 	}
-
+	
+	@Override
+	public void readMongo(MongoData data) {
+		x = data.getDouble("x", 0);
+		y = data.getDouble("y", 0);
+		z = data.getDouble("z", 0);
+		w = data.getDouble("w", 1);
+	}
+	
+	@Override
+	public void saveMongo(MongoData data) {
+		data.putDouble("x", x);
+		data.putDouble("y", y);
+		data.putDouble("z", z);
+		data.putDouble("w", w);
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("Quaternion[%.3f, %.3f, %.3f, %.3f]", x, y, z, w);

@@ -109,6 +109,16 @@ public class SceneCreateObjectByCrc extends SWGPacket {
 		return hyperspace;
 	}
 	
+	@Override
+	protected String getPacketData() {
+		return createPacketInformation(
+				"objId", objId,
+				"location", location,
+				"template", com.projectswg.common.data.CRC.getString(objCrc),
+				"hyperspace", hyperspace
+		);
+	}
+	
 	private void verifyInternals() {
 		packetAssert(objId != 0, "Object ID cannot be 0!");
 		packetAssert(location != null, "location cannot be null");

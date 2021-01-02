@@ -116,8 +116,15 @@ public class GetMapLocationsResponseMessage extends SWGPacket {
 	}
 
 	@Override
-	public String toString() {
-		return "[GetMapLocationsResponseMessage] " +
-				"staticVersion=" + staticLocVersion + "dynamicVersion=" + dynamicLocVersion + "persistVersion=" + persistentLocVersion;
+	protected String getPacketData() {
+		return createPacketInformation(
+				"planet", planet,
+				"staticLocations", updatedStaticLocations == null ? "null" : updatedStaticLocations.size(),
+				"staticVersion", staticLocVersion,
+				"dynamicLocations", updatedDynamicLocations == null ? "null" : updatedDynamicLocations.size(),
+				"dynamicVersion", dynamicLocVersion,
+				"persistLocations", updatedPersistLocations == null ? "null" : updatedPersistLocations.size(),
+				"persistVersion", persistentLocVersion
+		);
 	}
 }

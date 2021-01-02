@@ -29,6 +29,7 @@ package com.projectswg.common.network.packets;
 import com.projectswg.common.data.EnumLookup;
 import com.projectswg.common.network.packets.swg.holo.login.HoloLoginRequestPacket;
 import com.projectswg.common.network.packets.swg.holo.login.HoloLoginResponsePacket;
+import com.projectswg.common.network.packets.swg.zone.*;
 import me.joshlarson.jlcommon.log.Log;
 import com.projectswg.common.network.packets.swg.ErrorMessage;
 import com.projectswg.common.network.packets.swg.ServerUnixEpochTime;
@@ -139,6 +140,8 @@ import com.projectswg.common.network.packets.swg.zone.chat.ChatUninviteFromRoom;
 import com.projectswg.common.network.packets.swg.zone.chat.ConGenericMessage;
 import com.projectswg.common.network.packets.swg.zone.combat.GrantCommandMessage;
 import com.projectswg.common.network.packets.swg.zone.deltas.DeltasMessage;
+import com.projectswg.common.network.packets.swg.zone.guild.GuildRequestMessage;
+import com.projectswg.common.network.packets.swg.zone.guild.GuildResponseMessage;
 import com.projectswg.common.network.packets.swg.zone.insertion.ChatRoomList;
 import com.projectswg.common.network.packets.swg.zone.insertion.ChatServerStatus;
 import com.projectswg.common.network.packets.swg.zone.insertion.CmdStartScene;
@@ -237,9 +240,14 @@ public enum PacketType {
 	PLAY_MUSIC_MESSAGE							(PlayMusicMessage.CRC,				PlayMusicMessage.class),
 	PLAY_CLIENT_EFFECT_OBJECT_MESSAGE			(PlayClientEffectObjectMessage.CRC, PlayClientEffectObjectMessage.class),
 	STOP_CLIENT_EFFECT_OBJECT_BY_LABEL			(StopClientEffectObjectByLabelMessage.CRC, 	StopClientEffectObjectByLabelMessage.class),
+	PLAY_CLIENT_EFFECT_LOC_MESSAGE				(PlayClientEffectLocMessage.CRC,	PlayClientEffectLocMessage.class),
 	EXPERTISE_REQUEST_MESSAGE					(ExpertiseRequestMessage.CRC,		ExpertiseRequestMessage.class),
 	CHANGE_ROLE_ICON_CHOICE						(ChangeRoleIconChoice.CRC,			ChangeRoleIconChoice.class),
 	SHOW_LOOT_BOX								(ShowLootBox.CRC,					ShowLootBox.class),
+	CREATE_CLIENT_PATH_MESSAGE					(CreateClientPathMessage.CRC,		CreateClientPathMessage.class),
+	DESTROY_CLIENT_PATH_MESSAGE					(DestroyClientPathMessage.CRC,		DestroyClientPathMessage.class),
+	GUILD_REQUEST_MESSAGE						(GuildRequestMessage.CRC,			GuildRequestMessage.class),
+	GUILD_RESPONSE_MESSAGE						(GuildResponseMessage.CRC,			GuildResponseMessage.class),
 	
 		// Chat
 		CHAT_CREATE_ROOM						(ChatCreateRoom.CRC,				ChatCreateRoom.class),
@@ -280,6 +288,7 @@ public enum PacketType {
 
 		// Scene
 		SCENE_END_BASELINES						(SceneEndBaselines.CRC, 				SceneEndBaselines.class),
+		SCENE_CREATE_OBJECT_BY_NAME				(SceneCreateObjectByName.CRC, 			SceneCreateObjectByName.class),
 		SCENE_CREATE_OBJECT_BY_CRC				(SceneCreateObjectByCrc.CRC, 			SceneCreateObjectByCrc.class),
 		SCENE_DESTROY_OBJECT					(SceneDestroyObject.CRC, 				SceneDestroyObject.class),
 		UPDATE_CONTAINMENT_MESSAGE				(UpdateContainmentMessage.CRC, 			UpdateContainmentMessage.class),

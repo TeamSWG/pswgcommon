@@ -7,54 +7,61 @@
  * continue playing a game similar to the one they used to play. We are basing     *
  * it on the final publish of the game prior to end-game events.                   *
  *                                                                                 *
- * This file is part of PSWGCommon.                                                *
+ * This file is part of Holocore.                                                  *
  *                                                                                 *
  * --------------------------------------------------------------------------------*
  *                                                                                 *
- * PSWGCommon is free software: you can redistribute it and/or modify              *
+ * Holocore is free software: you can redistribute it and/or modify                *
  * it under the terms of the GNU Affero General Public License as                  *
  * published by the Free Software Foundation, either version 3 of the              *
  * License, or (at your option) any later version.                                 *
  *                                                                                 *
- * PSWGCommon is distributed in the hope that it will be useful,                   *
+ * Holocore is distributed in the hope that it will be useful,                     *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of                  *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   *
  * GNU Affero General Public License for more details.                             *
  *                                                                                 *
  * You should have received a copy of the GNU Affero General Public License        *
- * along with PSWGCommon.  If not, see <http://www.gnu.org/licenses/>.             *
+ * along with Holocore.  If not, see <http://www.gnu.org/licenses/>.               *
  ***********************************************************************************/
-package com.projectswg.common.data.customization;
+package com.projectswg.common.data.encodables.gcw;
 
-public class CustomizationVariable {
+import com.projectswg.common.encoding.Encodable;
+import com.projectswg.common.network.NetBuffer;
+
+public class GcwRegionZone implements Encodable {
 	
-	private int value;
+	private final String name;
+	private final float x;
+	private final float z;
+	private final float radius;
 	
-	public CustomizationVariable() {
+	public GcwRegionZone(String name, float x, float z, float radius) {
+		this.name = name;
+		this.x = x;
+		this.z = z;
+		this.radius = radius;
 	}
 	
-	public CustomizationVariable(int value) {
-		this.value = value;
+	@Override
+	public void decode(NetBuffer data) {
+	
 	}
 	
-	/**
-	 *
-	 * @return {@code true} if the value is reserved by UTF-8 and escaping it
-	 * would be necessary for proper compatibility.
-	 */
-	boolean isReserved() {
-		return value == 0x00 || value == 0xFF;
+	@Override
+	public byte[] encode() {
+		NetBuffer buffer = NetBuffer.allocate(getLength());
+		
+		buffer.addAscii(name);
+		buffer.addFloat(x);
+		buffer.addFloat(z);
+		buffer.addFloat(radius);
+		
+		return buffer.array();
 	}
 	
-	public int getValue() {
-		return value;
-	}
-	
-	public void setValue(int value) {
-		this.value = value;
-	}
-	
-	public String toString() {
-		return "CustomizationVariable["+value+']';
+	@Override
+	public int getLength() {
+		return 2 + name.length() + Float.BYTES * 3;
 	}
 }

@@ -56,7 +56,8 @@ public abstract class DataFactory {
 				Log.e(e);
 			return null;
 		}
-
+		
+		Log.d("Type: %s", swgFile.getType());
 		ClientData clientData = createDataObject(swgFile.getType());
 		if (clientData == null)
 			return null;

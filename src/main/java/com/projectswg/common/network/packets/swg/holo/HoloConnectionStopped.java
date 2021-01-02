@@ -70,7 +70,9 @@ public class HoloConnectionStopped extends HoloPacket {
 		return reason;
 	}
 	
-	public static enum ConnectionStoppedReason {
+	public enum ConnectionStoppedReason {
+		CRASH,
+		NEW_CONNECTION,
 		APPLICATION,
 		INVALID_PROTOCOL,
 		OTHER_SIDE_TERMINATED,

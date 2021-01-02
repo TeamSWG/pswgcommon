@@ -89,7 +89,15 @@ public abstract class ObjectController extends SWGPacket {
 	
 	public void setUpdate(int update) { this.update = update; }
 	
-	public static final ObjectController decodeController(NetBuffer data) {
+	@Override
+	protected String getPacketData() {
+		return createPacketInformation(
+				"objId", objectId,
+				"crc", "0x"+Integer.toHexString(controllerCrc)
+		);
+	}
+	
+	public static ObjectController decodeController(NetBuffer data) {
 		if (data.array().length < 14)
 			return null;
 		int pos = data.position();
@@ -108,9 +116,12 @@ public abstract class ObjectController extends SWGPacket {
 			case 0x0134: return new CombatSpam(data);
 			case 0x013F: return new TeleportAck(data);
 			case 0x0146: return new ObjectMenuRequest(data);
+			case 0x0147: return new ObjectMenuResponse(data);
 			case 0x01BD: return new ShowFlyText(data);
 			case 0x01BF: return new DraftSlotsQueryResponse(data);
 			case 0x01DB: return new BiographyUpdate(data);
+			case 0x0229: return new BuffAddUpdate(data);
+			case 0x022A: return new BuffRemoveUpdate(data);
 			case 0x043D: return new GroupOpenLotteryWindow(data);
 			case 0x043E: return new GroupCloseLotteryWindow(data);
 			case 0x0440: return new GroupRequestLotteryItems(data);
@@ -119,6 +130,7 @@ public abstract class ObjectController extends SWGPacket {
 			case 0x04BC: return new ShowLootBox(data);
 			case 0x04C5: return new IntendedTarget(data);
 			case 0x00F5: return new MissionListRequest(data);
+			case 0x00F9: return new MissionAcceptRequest(data);
 			case 0x041C: return new JTLTerminalSharedMessage(data);
 			case 0x0115: return new SecureTrade(data);
 		}

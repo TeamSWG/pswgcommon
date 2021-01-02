@@ -63,4 +63,12 @@ public class PostureUpdate extends ObjectController {
 	
 	public void setPosture(Posture posture) { this.posture = posture; }
 	
+	@Override
+	protected String getPacketData() {
+		return createPacketInformation(
+				"objId", getObjectId(),
+				"posture", posture
+		);
+	}
+	
 }

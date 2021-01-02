@@ -67,4 +67,14 @@ public class UpdateContainmentMessage extends SWGPacket {
 	public long getObjectId() { return objectId; }
 	public long getContainerId() { return containerId; }
 	public int getSlotIndex() { return slotIndex; }
+	
+	@Override
+	protected String getPacketData() {
+		return createPacketInformation(
+				"objId", objectId,
+				"containerId", containerId,
+				"slot", slotIndex
+		);
+	}
+	
 }
